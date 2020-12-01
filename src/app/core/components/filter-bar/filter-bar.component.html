@@ -1,0 +1,9 @@
+<div>
+    <p>Entries : {{ entries }}</p>
+    <p>Displayed : {{ displayStatus ? entries : 0 }}</p>
+</div>
+<div>
+    <button type="button" (click)="toggleDisplay()">
+        {{ displayStatus ? 'Hide All' : 'Display All'}}
+    </button>
+</div>
