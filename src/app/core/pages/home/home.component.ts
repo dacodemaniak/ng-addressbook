@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AddressInterface } from './../../interfaces/address-interface';
 import { AddressService } from './../../services/address.service';
 
@@ -10,11 +11,18 @@ import { AddressService } from './../../services/address.service';
 export class HomeComponent implements OnInit {
   public title: string = 'address-book'
   private _description: string
-  
+
   public isDisplayed: boolean = true
   public addresses: Map<number, AddressInterface>
 
-  public constructor(private addressService: AddressService) {
+  public addressForm: FormGroup
+
+  public isFormVisible = false
+
+  public constructor(
+    private addressService: AddressService,
+    private formBuilder: FormBuilder
+  ) {
     this._description = 'My Personal Address Book'
     this.addresses = addressService.addresses
   }
@@ -41,18 +49,48 @@ export class HomeComponent implements OnInit {
   }
 
   public addAddress(): void {
-
-    this.addressService.add(
-      {
-        lastName: 'Casper',
-        firstName: 'Le Fantome',
-        phoneNumber: '0120202020',
-        email: 'casper@ghost.com'
-      }
-    )
+    this.isFormVisible = true
   }
 
+  public get lastName(): AbstractControl {
+    return this.addressForm.controls.lastName
+  }
+  public get phoneNumber(): AbstractControl {
+    return this.addressForm.controls.phoneNumber
+  }
+
+  public get email(): AbstractControl {
+    return this.addressForm.controls.email
+  }
+
+  public onSubmit(): void {
+    if (this.addressForm.valid) {
+      this.addressService.add(this.addressForm.value)
+    }
+    this.addressForm.reset()
+    this.isFormVisible = false
+  }
   ngOnInit(): void {
+    this.addressForm = this.formBuilder.group({
+      lastName: [
+        '',
+        Validators.required
+      ],
+      firstName: [
+        ''
+      ],
+      phoneNumber: [
+        '',
+        Validators.required
+      ],
+      email: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.email
+        ])
+      ]
+    })
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AddressInterface } from '../../interfaces/address-interface';
 import { AddressService } from '../../services/address.service';
 
@@ -13,11 +13,16 @@ export class AddressDetailComponent implements OnInit {
 
   constructor(
     private routeService: ActivatedRoute,
+    private router: Router,
     private addressService: AddressService
   ) { }
 
   ngOnInit(): void {
     this.address = this.addressService.find(+this.routeService.snapshot.paramMap.get('id'))
+  }
+
+  public goHome(): void {
+    this.router.navigate(['home'])
   }
 
 }
