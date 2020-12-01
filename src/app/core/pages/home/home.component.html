@@ -18,3 +18,42 @@
 <button type="button" (click)="addAddress()">
   Ajouter
 </button>
+
+<ng-container>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput type="text" formControlName="lastName" placeholder="Nom du contact">
+      <mat-error *ngIf="lastName.touched && lastName.invalid">
+Le nom est obligatoire !
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" formControlName="firstName" placeholder="Prénom">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" formControlName="phoneNumber" placeholder="Téléphone">
+      <mat-error *ngIf="phoneNumber.touched && phoneNumber.invalid">
+        Le téléphone est obligatoire !
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="email" formControlName="email" placeholder="e-mail">
+      <mat-error *ngIf="email.touched && email.invalid">
+        <span *ngIf="email.hasError('required')">
+          L'e-mail est obligatoire
+        </span>
+        <span *ngIf="email.hasError('email')">
+          L'email saisi n'est pas conforme
+        </span>
+      </mat-error>
+    </mat-form-field>
+
+    <div>
+      <button [disabled]="addressForm.invalid">
+        Ajouter
+      </button>
+    </div>
+
+    {{ addressForm.value | json }}
+  </form>
+</ng-container>
