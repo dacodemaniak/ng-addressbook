@@ -10,16 +10,16 @@
 ></app-filter-bar>
 
 <div *ngIf="isDisplayed">
-  <div *ngFor="let content of addresses | keyvalue">
+  <div appNew [address]="content.value" [ngClass]="{addresswrapper: true, isodd: content.value.id % 2}" *ngFor="let content of addresses | keyvalue">
     <a routerLink="/address/{{ content.key }}">{{ content.value.lastName }}</a> <span>{{ content.value.firstName }}</span>
   </div>
 </div>
 
-<button type="button" (click)="addAddress()">
+<button mat-button color="warn" type="button" [disabled]="isFormVisible" (click)="addAddress()">
   Ajouter
 </button>
 
-<ng-container>
+<ng-container *ngIf="isFormVisible">
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <input matInput type="text" formControlName="lastName" placeholder="Nom du contact">
@@ -49,7 +49,7 @@ Le nom est obligatoire !
     </mat-form-field>
 
     <div>
-      <button [disabled]="addressForm.invalid">
+      <button mat-button color="primary" [disabled]="addressForm.invalid">
         Ajouter
       </button>
     </div>

@@ -11,11 +11,13 @@ import { AddressService } from './../../services/address.service';
 export class HomeComponent implements OnInit {
   public title: string = 'address-book'
   private _description: string
-  
+
   public isDisplayed: boolean = true
   public addresses: Map<number, AddressInterface>
 
   public addressForm: FormGroup
+
+  public isFormVisible = false
 
   public constructor(
     private addressService: AddressService,
@@ -47,15 +49,7 @@ export class HomeComponent implements OnInit {
   }
 
   public addAddress(): void {
-
-    this.addressService.add(
-      {
-        lastName: 'Casper',
-        firstName: 'Le Fantome',
-        phoneNumber: '0120202020',
-        email: 'casper@ghost.com'
-      }
-    )
+    this.isFormVisible = true
   }
 
   public get lastName(): AbstractControl {
@@ -74,6 +68,7 @@ export class HomeComponent implements OnInit {
       this.addressService.add(this.addressForm.value)
     }
     this.addressForm.reset()
+    this.isFormVisible = false
   }
   ngOnInit(): void {
     this.addressForm = this.formBuilder.group({
