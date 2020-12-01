@@ -1,0 +1,20 @@
+<h1>{{ title | uppercase }}</h1>
+
+<blockquote>
+  {{ description }}
+</blockquote>
+
+<app-filter-bar
+  [entries]="addresses.size"
+  (toggleView)="toggleDisplay($event)"
+></app-filter-bar>
+
+<div *ngIf="isDisplayed">
+  <div *ngFor="let content of addresses | keyvalue">
+    <a routerLink="/address/{{ content.key }}">{{ content.value.lastName }}</a> <span>{{ content.value.firstName }}</span>
+  </div>
+</div>
+
+<button type="button" (click)="addAddress()">
+  Ajouter
+</button>

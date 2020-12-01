@@ -9,18 +9,21 @@ export class AddressService {
 
   constructor() {
     this._addresses.set(1, {
+      id: 1,
       firstName: 'Jean-Luc',
       lastName: 'Aubert',
       phoneNumber: '0523232323',
       email: 'jla.webprojet@gmail.com'
     })
     this._addresses.set(2, {
+      id: 2,
       firstName: 'Julien',
       lastName: 'Test',
       phoneNumber: '0523232323',
       email: 'julien@julien.fr'
     })
     this._addresses.set(3, {
+      id: 3,
       firstName: 'Amira',
       lastName: 'Test2',
       phoneNumber: '0521212121',
@@ -33,6 +36,11 @@ export class AddressService {
   }
 
   public add(address: AddressInterface): void {
-    this._addresses.set(this._addresses.size + 1, address)
+    address.id = this._addresses.size + 1
+    this._addresses.set(address.id, address)
+  }
+
+  public find(id: number): AddressInterface | null {
+    return this._addresses.get(id)
   }
 }
