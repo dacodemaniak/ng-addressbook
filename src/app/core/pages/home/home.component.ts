@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AddressInterface } from './../../interfaces/address-interface';
 import { AddressService } from './../../services/address.service';
 
@@ -10,11 +11,11 @@ import { AddressService } from './../../services/address.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public title: string = 'address-book'
+  public title$: Observable<string>
   private _description: string
 
   public isDisplayed: boolean = true
-  public addresses: Observable<Map<number, AddressInterface>>
+  public addresses$: BehaviorSubject<Map<number, AddressInterface>>
 
   public addressForm: FormGroup
 
@@ -22,10 +23,11 @@ export class HomeComponent implements OnInit {
 
   public constructor(
     private addressService: AddressService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private translateService: TranslateService
   ) {
     this._description = 'My Personal Address Book'
-    this.addresses = addressService.addresses
+    this.addresses$ = addressService.addressesSubject$
   }
 
   /**
@@ -71,7 +73,17 @@ export class HomeComponent implements OnInit {
     this.addressForm.reset()
     this.isFormVisible = false
   }
+
+  public doDelete(address: AddressInterface): void {
+    this.addressService.delete(address)
+  }
+  
   ngOnInit(): void {
+    // Modifier le sujet en récupérant toutes les adresses
+    this.addressService.getAddresses()
+
+    this.title$ = this.translateService.get('home.title')
+
     this.addressForm = this.formBuilder.group({
       lastName: [
         '',

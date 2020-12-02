@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button'
 
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component'
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { FooterComponent } from './components/footer/footer.component'
   imports: [
     CommonModule,
     MatToolbarModule,
+    TranslateModule
     
   ],
   exports: [

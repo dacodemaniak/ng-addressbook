@@ -1,17 +1,22 @@
-<h1>{{ title | uppercase }}</h1>
+<h1>{{ title$ | async }}</h1>
 
 <blockquote>
   {{ description }}
 </blockquote>
 
 <app-filter-bar
-  [entries]="(addresses | async).size"
+  [entries]="(addresses$ | async).size"
   (toggleView)="toggleDisplay($event)"
 ></app-filter-bar>
 
 <div *ngIf="isDisplayed">
-  <div appNew [address]="content.value" [ngClass]="{addresswrapper: true, isodd: content.value.id % 2}" *ngFor="let content of (addresses | async) | keyvalue">
+  <div appNew [address]="content.value" [ngClass]="{addresswrapper: true, isodd: content.value.id % 2}" *ngFor="let content of (addresses$ | async) | keyvalue">
     <a routerLink="/address/{{ content.key }}">{{ content.value.lastName }}</a> <span>{{ content.value.firstName }}</span>
+    <div>
+      <button type="button" (click)="doDelete(content.value)">
+        X
+      </button>
+    </div>
   </div>
 </div>
 

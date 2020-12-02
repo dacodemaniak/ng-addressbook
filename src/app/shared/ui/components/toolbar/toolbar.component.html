@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <span>My Address Book</span>
+    <span>{{ 'appTitle' | translate }}</span>
     <button type="button" (click)="doLog()">
         {{ (getSubject() | async) ? 'Logout' : 'Login' }}
     </button>

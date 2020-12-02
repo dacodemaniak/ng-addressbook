@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, Injector, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,12 +8,35 @@ import { HomeComponent } from './core/pages/home/home.component';
 import { AddressDetailComponent } from './core/pages/address-detail/address-detail.component';
 import { ElapsedTimePipe } from './core/pipes/elapsed-time.pipe';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { UiModule } from './shared/ui/ui.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewDirective } from './core/directives/new.directive';
 import { fakeBackendProvider } from './core/helpers/fake-backend-interceptor';
+import { TranslationService } from './core/services/translation.service';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// Set a function that invoke init method from translationService
+export function translationInitializerFactory(
+  translationService: TranslationService,
+  translateService: TranslateService,
+  injector: Injector
+){
+  return (): Promise<void> => {
+    return translationService.init(translateService, injector)
+  }
+}
+
+export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(
+    httpClient,
+    './assets/i18n/',
+    '.json'
+  )
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,10 +52,29 @@ import { fakeBackendProvider } from './core/helpers/fake-backend-interceptor';
     HttpClientModule,
     BrowserAnimationsModule,
     UiModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [
+          HttpClient
+        ]
+      }
+    })
   ],
   providers: [
-    fakeBackendProvider
+    fakeBackendProvider,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: translationInitializerFactory,
+      deps: [
+        TranslationService,
+        TranslateService,
+        Injector
+      ],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
