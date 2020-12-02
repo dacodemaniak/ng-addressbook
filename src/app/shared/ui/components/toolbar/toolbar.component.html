@@ -1,3 +1,6 @@
 <mat-toolbar>
     <span>My Address Book</span>
+    <button type="button" (click)="doLog()">
+        {{ (getSubject() | async) ? 'Logout' : 'Login' }}
+    </button>
 </mat-toolbar>
