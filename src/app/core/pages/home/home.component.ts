@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { AddressInterface } from './../../interfaces/address-interface';
 import { AddressService } from './../../services/address.service';
 
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit {
   private _description: string
 
   public isDisplayed: boolean = true
-  public addresses: Map<number, AddressInterface>
+  public addresses: Observable<Map<number, AddressInterface>>
 
   public addressForm: FormGroup
 

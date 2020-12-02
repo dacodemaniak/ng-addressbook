@@ -6,12 +6,9 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
 import * as moment from 'moment';
 
-// array in local storage for registered users
-let storedAddresses: AddressInterface[] = JSON.parse(localStorage.getItem('addresses')) || [];
-let addresses: Map<number, AddressInterface> = new Map();
-storedAddresses.forEach((address) => {
-addresses.set(address.id, address)
-});
+// array in local storage for addresses
+let addresses: AddressInterface[] = JSON.parse(localStorage.getItem('addresses')) || [];
+
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -55,33 +52,34 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function deleteAddress(): Observable<HttpResponse<any>> {
-
-            addresses.delete(idFromUrl());
-            localStorage.setItem('addresses', JSON.stringify(Array.from(addresses.values())));
+addresses = addresses.filter((obj) => obj.id !== idFromUrl())
+            
+            localStorage.setItem('addresses', JSON.stringify(addresses));
             return ok({message: 'address was deleted'});
         }
 
         function getAddress(): Observable<HttpResponse<any>> {
-          const address: AddressInterface = addresses.get(idFromUrl());
+          const address: AddressInterface = addresses.find((obj: AddressInterface) => obj.id === idFromUrl());
           return ok(address);
         }
 
         function addAddress(request: HttpRequest<any>): Observable<HttpResponse<any>> {
             const address: AddressInterface = request.body
-            address.id = addresses.size + 1
+            address.id = addresses.length + 1
             address.creationDate = moment()
-            addresses.set(address.id, address)
+            addresses.push(address)
             // Update local database
-            localStorage.setItem('addresses', JSON.stringify(Array.from(addresses.values())))
+            localStorage.setItem('addresses', JSON.stringify(addresses))
 
             // Return an observable of the brand new event
             return ok(address)
         }
 
         function updateAddress(request: HttpRequest<any>): Observable<HttpResponse<any>> {
-            addresses.set(request.body.id, request.body)
+            const addressIndex: number = addresses.findIndex((obj: AddressInterface) => obj.id === request.body.id)
+            addresses[addressIndex] = request.body
             // Update local database
-            localStorage.setItem('addresses', JSON.stringify(Array.from(addresses.values())))
+            localStorage.setItem('addresses', JSON.stringify(addresses))
             return ok(request.body)
         } 
         // helper functions

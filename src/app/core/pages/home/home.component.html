@@ -5,12 +5,12 @@
 </blockquote>
 
 <app-filter-bar
-  [entries]="addresses.size"
+  [entries]="(addresses | async).size"
   (toggleView)="toggleDisplay($event)"
 ></app-filter-bar>
 
 <div *ngIf="isDisplayed">
-  <div appNew [address]="content.value" [ngClass]="{addresswrapper: true, isodd: content.value.id % 2}" *ngFor="let content of addresses | keyvalue">
+  <div appNew [address]="content.value" [ngClass]="{addresswrapper: true, isodd: content.value.id % 2}" *ngFor="let content of (addresses | async) | keyvalue">
     <a routerLink="/address/{{ content.key }}">{{ content.value.lastName }}</a> <span>{{ content.value.firstName }}</span>
   </div>
 </div>

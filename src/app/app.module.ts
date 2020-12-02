@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { UiModule } from './shared/ui/ui.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewDirective } from './core/directives/new.directive';
+import { fakeBackendProvider } from './core/helpers/fake-backend-interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,9 @@ import { NewDirective } from './core/directives/new.directive';
     UiModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    fakeBackendProvider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
